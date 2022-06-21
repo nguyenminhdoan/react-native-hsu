@@ -6,6 +6,8 @@ import { ListItem, Avatar } from "react-native-elements";
 import { baseUrl } from "../shared/baseUrl";
 import { connect } from "react-redux";
 
+import Loading from "./LoadingComponent";
+
 const mapStateToProps = (state) => {
   return {
     leaders: state.leaders,

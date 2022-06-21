@@ -16,12 +16,25 @@ import Dishdetail from "./DishdetailComponent";
 import Home from "./HomeComponent";
 import Contact from "./ContactComponent";
 import About from "./AboutComponent";
+import Reservation from "./ReservationComponent";
+import Favorites from "./FavoriteComponent";
+import Login from "./LoginComponent";
+
+import { baseUrl } from "../shared/baseUrl";
 
 import { connect } from "react-redux";
-import { fetchLeaders } from "../redux/ActionCreators";
+import {
+  fetchLeaders,
+  fetchDishes,
+  fetchComments,
+  fetchPromos,
+} from "../redux/ActionCreators";
 
 const mapDispatchToProps = (dispatch) => ({
   fetchLeaders: () => dispatch(fetchLeaders()),
+  fetchDishes: () => dispatch(fetchDishes()),
+  fetchComments: () => dispatch(fetchComments()),
+  fetchPromos: () => dispatch(fetchPromos()),
 });
 
 function MenuNavigatorScreen() {
@@ -53,6 +66,36 @@ function MenuNavigatorScreen() {
         options={{ headerTitle: "Dish Detail" }}
       />
     </MenuNavigator.Navigator>
+  );
+}
+
+function LoginNavigatorScreen() {
+  const LoginNavigator = createStackNavigator();
+  return (
+    <LoginNavigator.Navigator
+      initialRouteName="Login"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#7cc" },
+        headerTintColor: "#fff",
+        headerTitleStyle: { color: "#fff" },
+      }}
+    >
+      <LoginNavigator.Screen
+        name="Login"
+        component={Login}
+        options={({ navigation }) => ({
+          headerTitle: "Login",
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={36}
+              color="#fff"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+      />
+    </LoginNavigator.Navigator>
   );
 }
 
@@ -110,6 +153,36 @@ function ContactNavigatorScreen() {
   );
 }
 
+function ReservationNavigatorScreen() {
+  const ReservationNavigator = createStackNavigator();
+  return (
+    <ReservationNavigator.Navigator
+      initialRouteName="Reservation"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#7cc" },
+        headerTintColor: "#fff",
+        headerTitleStyle: { color: "#fff" },
+      }}
+    >
+      <ReservationNavigator.Screen
+        name="Reservation"
+        component={Reservation}
+        options={({ navigation }) => ({
+          headerTitle: "Reserve Table",
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={36}
+              color="#fff"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+      />
+    </ReservationNavigator.Navigator>
+  );
+}
+
 function AboutNavigatorScreen() {
   const AboutNavigator = createStackNavigator();
   return (
@@ -137,6 +210,41 @@ function AboutNavigatorScreen() {
   );
 }
 
+function FavoritesNavigatorScreen() {
+  const FavoritesNavigator = createStackNavigator();
+  return (
+    <FavoritesNavigator.Navigator
+      initialRouteName="Favorites"
+      screenOptions={{
+        headerStyle: { backgroundColor: "#7cc" },
+        headerTintColor: "#fff",
+        headerTitleStyle: { color: "#fff" },
+      }}
+    >
+      <FavoritesNavigator.Screen
+        name="Favorites"
+        component={Favorites}
+        options={({ navigation }) => ({
+          headerTitle: "My Favorites",
+          headerLeft: () => (
+            <Icon
+              name="menu"
+              size={36}
+              color="#fff"
+              onPress={() => navigation.toggleDrawer()}
+            />
+          ),
+        })}
+      />
+      <FavoritesNavigator.Screen
+        name="Dishdetail"
+        component={Dishdetail}
+        options={{ headerTitle: "Dish Detail" }}
+      />
+    </FavoritesNavigator.Navigator>
+  );
+}
+
 function MainNavigatorScreen() {
   const MainNavigator = createDrawerNavigator();
   return (
@@ -155,6 +263,22 @@ function MainNavigatorScreen() {
           headerShown: false,
           drawerIcon: ({ focused, size }) => (
             <Icon name="home" size={size} color={focused ? "#7cc" : "#ccc"} />
+          ),
+        }}
+      />
+      <MainNavigator.Screen
+        name="LoginScreen"
+        component={Login}
+        options={{
+          title: "Login",
+          headerShown: false,
+          drawerIcon: ({ focused, size }) => (
+            <Icon
+              name="sign-in"
+              type="font-awesome"
+              size={size}
+              color={focused ? "#7cc" : "#ccc"}
+            />
           ),
         }}
       />
@@ -196,6 +320,38 @@ function MainNavigatorScreen() {
           ),
         }}
       ></MainNavigator.Screen>
+      <MainNavigator.Screen
+        name="ReservationScreen"
+        component={ReservationNavigatorScreen}
+        options={{
+          title: "Reserve Table",
+          headerShown: false,
+          drawerIcon: ({ focused, size }) => (
+            <Icon
+              name="cutlery"
+              type="font-awesome"
+              size={size}
+              color={focused ? "#7cc" : "#ccc"}
+            />
+          ),
+        }}
+      />
+      <MainNavigator.Screen
+        name="FavoritesScreen"
+        component={FavoritesNavigatorScreen}
+        options={{
+          title: "My Favorites",
+          headerShown: false,
+          drawerIcon: ({ focused, size }) => (
+            <Icon
+              name="heart"
+              type="font-awesome"
+              size={size}
+              color={focused ? "#7cc" : "#ccc"}
+            />
+          ),
+        }}
+      />
     </MainNavigator.Navigator>
   );
 }
@@ -213,7 +369,7 @@ function CustomDrawerContent(props) {
       >
         <View style={{ flex: 1 }}>
           <Image
-            source={require("./images/logo.png")}
+            source={{ uri: baseUrl + "images/logo.png" }}
             style={{ margin: 10, width: 80, height: 60 }}
           />
         </View>
@@ -239,8 +395,10 @@ function CustomDrawerContent(props) {
 
 class Main extends Component {
   componentDidMount() {
-    // redux
     this.props.fetchLeaders();
+    this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
   }
   render() {
     return (
